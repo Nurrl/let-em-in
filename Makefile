@@ -6,11 +6,11 @@
 #    By: lroux <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/01/14 13:36:53 by lroux            ###   ########.fr        #
+#    Updated: 2019/01/14 13:46:33 by lroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-PROJECT	:= let-em-im
+PROJECT	:= let-em-in
 NAME	:= lem-in
 
 SRCDIR	:= srcs
