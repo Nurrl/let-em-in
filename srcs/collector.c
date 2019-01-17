@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_uintlen.c                                       :+:      :+:    :+:   */
+/*   collector.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lroux <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/03 15:20:57 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/17 14:35:01 by lroux            ###   ########.fr       */
+/*   Created: 2019/01/14 18:00:44 by lroux             #+#    #+#             */
+/*   Updated: 2019/01/14 18:05:14 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "lemin.h"
 
-char	ft_uintlen(unsigned long long n, int base)
+t_bool	collect(void *a)
 {
-	size_t len;
-
-	len = 0;
-	while (n /= base)
-		++len;
-	return (len + 1);
+	free(a);
+	return (false);
 }

@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_uintlen.c                                       :+:      :+:    :+:   */
+/*   let-em-in.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lroux <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/03 15:20:57 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/17 14:35:01 by lroux            ###   ########.fr       */
+/*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
+/*   Updated: 2019/01/17 12:03:47 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "lemin.h"
 
-char	ft_uintlen(unsigned long long n, int base)
+int	main(void)
 {
-	size_t len;
+	static t_lemin	lemin;
 
-	len = 0;
-	while (n /= base)
-		++len;
-	return (len + 1);
+	if (!parser(&lemin))
+		return (1);
+	return (0);
 }
