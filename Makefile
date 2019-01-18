@@ -6,7 +6,7 @@
 #    By: lroux <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/01/17 14:01:23 by lroux            ###   ########.fr        #
+#    Updated: 2019/01/18 16:38:00 by lroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRCS	:= lemin.c collector.c \
 
 LIBS	:= libft libpf
 LIBDIR	:= libs
+
+DEBUG	:= 1
 
 # Include core
 include $(LIBDIR)/project.mk

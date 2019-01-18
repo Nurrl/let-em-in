@@ -6,7 +6,7 @@
 /*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 11:45:56 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/17 14:45:07 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/18 16:19:24 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static t_bool	parsecommand(char **line, int *flags)
 			*flags = END;
 		free(*line);
 		if (gnl(stdin, line) < 1)
+			return (false);
+		if ((*line)[0] == '#')
 			return (false);
 	}
 	return (true);
@@ -73,7 +75,8 @@ t_bool			parserooms(t_lemin *lemin)
 			continue ;
 		if (ft_cw(line) != 3)
 			break ;
-		if (line[0] == 'L' || !createroom(line, flags, lemin))
+		if (line[0] == 'L' || ft_cc(line, '-')
+				|| !createroom(line, flags, lemin))
 			return (collect(line));
 		free(line);
 	}
