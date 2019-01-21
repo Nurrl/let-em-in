@@ -6,7 +6,7 @@
 /*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/17 14:21:11 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/21 19:15:27 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # include <libft.h>
 # include <libpf.h>
 # include <gnl.h>
+
+typedef struct	s_line {
+	char			*line;
+	struct s_line	*next;
+}				t_line;
 
 typedef struct	s_room {
 	int				id;
@@ -41,6 +46,8 @@ typedef struct	s_lemin {
 	t_rooms			rooms;
 
 	t_bool			**tubes;
+	t_line			*lines;
+	t_line			*lend;
 }				t_lemin;
 
 /*
@@ -50,11 +57,12 @@ typedef struct	s_lemin {
 t_bool			parser(t_lemin *lemin);
 t_bool			parserooms(t_lemin *lemin);
 t_bool			maketubes(t_lemin *lemin, char *line);
+int				keepgnl(const int fd, char **line, t_lemin *lemin);
 
 /*
 ** Collector functions
 */
 
-t_bool			collect(void *a);
+t_bool			collectlines(t_line *lines);
 
 #endif
