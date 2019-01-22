@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/22 17:29:09 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/22 18:00:42 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <libft.h>
 # include <libpf.h>
+# include <libnode.h>
 # include <gnl.h>
 
 typedef struct	s_line {
@@ -43,7 +44,7 @@ typedef struct	s_lemin {
 	int			antcount;
 
 	int			roomcount;
-	t_rooms		room;
+	t_rooms		rooms;
 
 	t_bool		**tubes;
 	t_line		*lines;
@@ -62,7 +63,8 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin);
 /*
 ** Math functions
 */
-t_room			*shortestpath(t_lemin lemin, int start, int end);
+
+int				*shortestpath(t_lemin *lemin);
 
 /*
 ** Collector functions

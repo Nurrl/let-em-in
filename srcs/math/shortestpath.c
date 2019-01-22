@@ -6,33 +6,36 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/22 17:28:07 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/22 18:05:05 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-int	*shortestpath(t_lemin lemin, int start, int end)
+int	*shortestpath(t_lemin *lemin)
 {
-	t_nodes	*queue;
-	int		*path;
+	t_nodes	queue;
+	t_nodes	path;
+	t_nodes	node;
 	int		*visited;
 	int		adjacent;
 
-	queue = nd_init(nd_init(start));
-	visited = ft_calloc(lemin->roomcount, sizeof(int));
+	path = nd_init(lemin->rooms.start);
+	queue = nd_init(&path);
+	if (!(visited = ft_calloc(lemin->roomcount, sizeof(*visited))))
+		return (NULL);
 	adjacent = -1;
-	while (queue->head)
+	while (queue.head)
 	{
-		path = nd_pophead(queue);
-		node = nd_gettail(queue);
-		if (node->val == end)
-			return (path);
+		path = *((t_nodes*)nd_pophead(&queue));
+		node = *((t_nodes*)nd_gettail(&queue));
+		if (node.data == end) // Nope
+			return (path); // Nope
 		while (++adjacent < lemin->roomcount)
 		{
-			if (matrix[node][adjacent] == 1 && visited[adjacent] == 0)
+			if (matrix[node][adjacent] == 1 && visited[adjacent] == 0) // Where is matrix ? 
 			{
-				newpath = ll_dup(path);
+				newpath = nd_dup(&path);
 				nd_pushtail(newpath, adjacent);
 				nd_pushtail(queue, newpath);
 				visited[adjacent] = 1;

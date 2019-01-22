@@ -6,27 +6,22 @@
 #    By: lroux <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/01/22 17:46:26 by lroux            ###   ########.fr        #
+#    Updated: 2019/01/22 17:01:17 by lroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-PROJECT	:= let-em-in
-NAME	:= lem-in
+PROJECT	:= libnode
+NAME	:= $(PROJECT).a
 
 SRCDIR	:= srcs
 OBJDIR	:= objs
 INCDIR	:= incs
 
-SRCS	:= lemin.c collector.c \
-		   parser/parser.c parser/parserooms.c parser/parsetubes.c \
-		   math/shortestpath.c
+SRCS	:= core.c push.c pop.c sort.c
 
-LIBS	:= libft libpf libnode
-LIBDIR	:= libs
-
-DEBUG	:= 1
+LIBS	:= libft
+LIBDIR	:= ..
 
 # Include core
-include $(LIBDIR)/project.mk
-
+include ../lib.mk
 
