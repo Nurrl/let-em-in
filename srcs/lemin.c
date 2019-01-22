@@ -6,7 +6,7 @@
 /*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/21 19:29:59 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/22 14:04:52 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,17 @@ static int	exiterr(void)
 
 static void	printlines(t_lemin *lemin)
 {
-	t_line	*line;
+	t_line	*lines;
 	char	*l;
 
 	while (keepgnl(stdin, &l, lemin) > 0)
 		;;
-	line = lemin->lines;
-	while (line->next)
+	lines = lemin->lines;
+	while (lines)
 	{
-		ft_printf("%s\n", line->line);
-		line =line->next;
+		if (lines->line)
+			ft_printf("%s\n", lines->line);
+		lines = lines->next;
 	}
 	collectlines(lemin->lines);
 }
@@ -58,7 +59,7 @@ int			main(void)
 	while (++y < lemin.roomcount && (x = -1) == -1)
 	{
 		while (++x < lemin.roomcount)
-			ft_printf("%2d ", lemin.tubes[y][x]);
+			ft_printf("%d ", lemin.tubes[y][x]);
 		ft_printf("\n");
 	}
 // Debug

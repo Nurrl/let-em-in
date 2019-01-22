@@ -6,7 +6,7 @@
 /*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 15:04:26 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/21 19:25:01 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/22 14:04:14 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin)
 	t_line	*cur;
 
 	rt = gnl(fd, line);
-	if (!(cur = malloc(sizeof(*cur))))
+	if (!(cur = ft_calloc(1, sizeof(*cur))))
 		return (-1);
 	cur->line = *line;
 	if (!lemin->lines)

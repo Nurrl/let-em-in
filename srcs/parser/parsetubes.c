@@ -6,7 +6,7 @@
 /*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 11:46:02 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/21 19:19:28 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/22 13:57:34 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,12 @@ t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2)
 			id2 = node->id;
 		node = node->next;
 	}
-	if (id1 != -1 && id2 != -1)
-	{
-		lemin->tubes[id1][id2] = true;
-		lemin->tubes[id2][id1] = true;
-	}
 	free(room1);
 	free(room2);
+	if (id1 == -1 || id2 == -1 || (id1 == id2))
+		return (false);
+	lemin->tubes[id1][id2] = true;
+	lemin->tubes[id2][id1] = true;
 	return (true);
 }
 
@@ -52,7 +51,7 @@ t_bool	maketubes(t_lemin *lemin, char *line)
 		if (!linkrooms(lemin,
 				ft_strndup(line, ft_strchr(line, '-') - line),
 				ft_strdup(ft_strchr(line, '-') + 1)))
-			return (false);
+			break ;
 		if (keepgnl(stdin, &line, lemin) < 1)
 			break ;
 	}
