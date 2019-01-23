@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsetubes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
+/*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 11:46:02 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/22 13:57:34 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/23 18:58:56 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2)
+t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2, t_rooms *rooms)
 {
 	t_room	*node;
 	int		id1;
@@ -20,7 +20,7 @@ t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2)
 
 	id1 = -1;
 	id2 = -1;
-	node = lemin->rooms.head;
+	node = rooms->head;
 	while (node)
 	{
 		if (ft_strequ(node->name, room1))
@@ -38,20 +38,24 @@ t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2)
 	return (true);
 }
 
-t_bool	maketubes(t_lemin *lemin, char *line)
+t_bool	maketubes(t_lemin *lemin, t_rooms *rooms, char *line)
 {
-	if (!(lemin->tubes = (t_bool**)ft_mk2array(
+	if (!(lemin->tubes = (int**)ft_mk2array(
 			lemin->roomcount, lemin->roomcount, sizeof(**lemin->tubes))))
 		return (false);
 	while (true)
 	{
-		if (ft_cc(line, '-') != 1
-				|| ft_strchr(line, '-')[1] == 0)
-			break ;
-		if (!linkrooms(lemin,
-				ft_strndup(line, ft_strchr(line, '-') - line),
-				ft_strdup(ft_strchr(line, '-') + 1)))
-			break ;
+		if (line[0] != '#')
+		{
+			if (ft_cc(line, '-') != 1
+					|| ft_strchr(line, '-')[1] == 0)
+				break ;
+			if (!linkrooms(lemin,
+					ft_strndup(line, ft_strchr(line, '-') - line),
+					ft_strdup(ft_strchr(line, '-') + 1),
+					rooms))
+				break ;
+		}
 		if (keepgnl(stdin, &line, lemin) < 1)
 			break ;
 	}

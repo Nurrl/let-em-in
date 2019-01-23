@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lroux <marvin@42.fr>                       +#+  +:+       +#+         #
+#    By: glodi <glodi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/01/22 17:46:26 by lroux            ###   ########.fr        #
+#    Updated: 2019/01/23 19:13:05 by glodi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,14 +19,12 @@ INCDIR	:= incs
 
 SRCS	:= lemin.c collector.c \
 		   parser/parser.c parser/parserooms.c parser/parsetubes.c \
-		   math/shortestpath.c
+		   kraken/bfs.c kraken/q.c
 
-LIBS	:= libft libpf libnode
+LIBS	:= libft libpf
 LIBDIR	:= libs
 
 DEBUG	:= 1
 
 # Include core
 include $(LIBDIR)/project.mk
-
-

@@ -6,16 +6,16 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/22 18:00:42 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/23 16:47:28 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN_H
 # define LEMIN_H
 
+# include "kraken.h"
 # include <libft.h>
 # include <libpf.h>
-# include <libnode.h>
 # include <gnl.h>
 
 typedef struct	s_line {
@@ -44,9 +44,11 @@ typedef struct	s_lemin {
 	int			antcount;
 
 	int			roomcount;
-	t_rooms		rooms;
+	t_room		*rooms; // Array of rooms
+	int			startid;
+	int			endid;
 
-	t_bool		**tubes;
+	int			**tubes;
 	t_line		*lines;
 	t_line		*lend;
 }				t_lemin;
@@ -56,15 +58,15 @@ typedef struct	s_lemin {
 */
 
 t_bool			parser(t_lemin *lemin);
-t_bool			parserooms(t_lemin *lemin);
-t_bool			maketubes(t_lemin *lemin, char *line);
+t_bool			parserooms(t_lemin *lemin, t_rooms *rooms);
+t_bool			maketubes(t_lemin *lemin, t_rooms *rooms, char *line);
 int				keepgnl(const int fd, char **line, t_lemin *lemin);
 
 /*
 ** Math functions
 */
 
-int				*shortestpath(t_lemin *lemin);
+int				*bfs(t_lemin *lemin);
 
 /*
 ** Collector functions

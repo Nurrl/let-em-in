@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parserooms.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lroux <git@heofon.co>                      +#+  +:+       +#+        */
+/*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 11:45:56 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/22 13:51:04 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/23 15:04:38 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static t_bool	parsecommand(char **line, int *flags, t_lemin *lemin)
 	return (true);
 }
 
-static t_bool	createroom(char *line, int flags, t_lemin *lemin)
+static t_bool	createroom(char *line, int flags,
+				t_lemin *lemin, t_rooms *rooms)
 {
 	t_room	*room;
 
@@ -44,24 +45,24 @@ static t_bool	createroom(char *line, int flags, t_lemin *lemin)
 			+ ft_strlen(room->name) + 1, NULL, 10);
 	room->y = ft_strtoll(line
 			+ ft_strlen(room->name) + 1 + ft_intlen(room->x, 10) + 1, NULL, 10);
-	if (!lemin->rooms.head)
+	if (!rooms->head)
 	{
-		lemin->rooms.head = room;
-		lemin->rooms.tail = room;
+		rooms->head = room;
+		rooms->tail = room;
 	}
 	else
 	{
-		lemin->rooms.tail->next = room;
-		lemin->rooms.tail = room;
+		rooms->tail->next = room;
+		rooms->tail = room;
 	}
 	if (flags == START)
-		lemin->rooms.start = room;
+		rooms->start = room;
 	else if (flags == END)
-		lemin->rooms.end = room;
+		rooms->end = room;
 	return (true);
 }
 
-t_bool			parserooms(t_lemin *lemin)
+t_bool			parserooms(t_lemin *lemin, t_rooms *rooms)
 {
 	char	*line;
 	int		flags;
@@ -75,8 +76,8 @@ t_bool			parserooms(t_lemin *lemin)
 		if (ft_cw(line) != 3)
 			break ;
 		if (line[0] == 'L' || ft_cc(line, '-')
-				|| !createroom(line, flags, lemin))
+				|| !createroom(line, flags, lemin, rooms))
 			return (false);
 	}
-	return (maketubes(lemin, line));
+	return (maketubes(lemin, rooms, line));
 }
