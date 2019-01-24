@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/23 19:14:56 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/24 15:12:33 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,14 @@ int			main(void)
 	ft_printf("[");
 	while (path[++i] != -1)
 	{
-		ft_printf("%s (%d)", lemin.rooms[path[i]].name, path[i]);
+		// ft_printf("%s", lemin.rooms[path[i]].name);
+		// ft_printf("/");
+		ft_printf("%d", path[i]);
 		if (path[i+1] != -1)
-			ft_printf(" > ", path[i]);
+			ft_printf(", ", path[i]);
 	}
 	ft_printf("]\n");
+	ft_memdel(&path);
 	/* Clear the structure (free) */
 	return (0);
 }

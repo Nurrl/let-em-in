@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:38:21 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/23 19:00:02 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/24 15:21:30 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,22 @@ int		*q_pophead(t_paths *q)
 	if (!q->head)
 		q->tail = NULL;
 	path = node->path;
-	free(node);
+	ft_memdel((void **)&node);
 	return (path);
 }
 
 void	q_destroy(t_paths *q)
 {
+	t_path	*tmp;
+	t_path	*next;
+
+	tmp = q->head;
+	while (tmp)
+	{
+		ft_memdel((void *)&tmp->path);
+		next = tmp->next;
+		ft_memdel((void **)&tmp);
+		tmp = next;
+	}
 	q = NULL;
 }

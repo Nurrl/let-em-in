@@ -6,20 +6,21 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/23 18:59:42 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/24 15:22:22 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-// static void	printpath(int *path)
-// {
-// 	for (int i = 0; path[i] != -1; i++)
-// 	{
-// 		ft_printf("%d>", path[i]);
-// 	}
-// 	ft_printf("\n");
-// }
+static void	printpath(int *path)
+{
+	ft_printf("%p: ", path);
+	for (int i = 0; path[i] != -1; i++)
+	{
+		ft_printf("%d>", path[i]);
+	}
+	ft_printf("\n");
+}
 
 static int *initpath(int count, size_t size)
 {
@@ -69,14 +70,13 @@ static void updatequeue(t_lemin *lemin, t_paths *q, int *path, t_bool *visited)
 
 	node = lastnode(path, lemin->roomcount);
 	adjacent = -1;
-
 	while (++adjacent <= lemin->roomcount)
 	{
 		if (lemin->tubes[node][adjacent] == 1 && visited[adjacent] == false)
 		{
 			newpath = pathdup(lemin->roomcount + 1, path, adjacent);
-			visited[adjacent] = true;
 			q_append(q, newpath);
+			visited[adjacent] = true;
 		}
 	}
 }
@@ -101,8 +101,14 @@ int		*bfs(t_lemin *lemin)
 	while ((path = q_pophead(&q)))
 	{
 		if (lastnode(path, lemin->roomcount) == lemin->endid)
-			return (path); // free q before svp
+		{
+			ft_memdel((void **)&visited);
+			q_destroy(&q);
+			return (path);
+		}
 		updatequeue(lemin, &q, path, visited);
+		ft_memdel((void **)&path);
 	}
+	ft_memdel((void **)&visited);
 	return (NULL);
 }
