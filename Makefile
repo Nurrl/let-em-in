@@ -6,7 +6,7 @@
 #    By: glodi <glodi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/01/24 14:12:33 by glodi            ###   ########.fr        #
+#    Updated: 2019/01/25 15:40:57 by glodi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ INCDIR	:= incs
 
 SRCS	:= lemin.c collector.c \
 		   parser/parser.c parser/parserooms.c parser/parsetubes.c \
-		   kraken/bfs.c kraken/q.c
+		   kraken/bfs.c kraken/karp.c kraken/q.c
 
 LIBS	:= libft libpf
 LIBDIR	:= libs

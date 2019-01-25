@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/23 16:47:28 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/25 18:06:35 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,12 @@ t_bool			maketubes(t_lemin *lemin, t_rooms *rooms, char *line);
 int				keepgnl(const int fd, char **line, t_lemin *lemin);
 
 /*
-** Math functions
+** Kraken functions
 */
 
-int				*bfs(t_lemin *lemin);
+int				*bfs(t_lemin *lemin, int **f);
+t_paths			*karp(t_lemin *l);
+int				*initpath(int count, size_t size);
 
 /*
 ** Collector functions

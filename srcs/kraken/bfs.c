@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/24 15:22:22 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/25 18:48:18 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 static void	printpath(int *path)
 {
-	ft_printf("%p: ", path);
+	ft_printf("\t%p: ", path);
 	for (int i = 0; path[i] != -1; i++)
 	{
-		ft_printf("%d>", path[i]);
+		ft_printf(" %d >", path[i]);
 	}
 	ft_printf("\n");
 }
 
-static int *initpath(int count, size_t size)
+int *initpath(int count, size_t size)
 {
 	int *path;
 
@@ -62,7 +62,8 @@ static int	*pathdup(int size, int *path, int toadd)
 	return (newpath);
 }
 
-static void updatequeue(t_lemin *lemin, t_paths *q, int *path, t_bool *visited)
+static void updatequeue(t_lemin *lemin, int **f, t_paths *q,
+		int *path, t_bool *visited)
 {
 	int	adjacent;
 	int node;
@@ -70,9 +71,11 @@ static void updatequeue(t_lemin *lemin, t_paths *q, int *path, t_bool *visited)
 
 	node = lastnode(path, lemin->roomcount);
 	adjacent = -1;
-	while (++adjacent <= lemin->roomcount)
+	while (++adjacent < lemin->roomcount)
 	{
-		if (lemin->tubes[node][adjacent] == 1 && visited[adjacent] == false)
+		if (lemin->tubes[node][adjacent] == 1
+			&& f[node][adjacent] != 1
+			&& visited[adjacent] == false)
 		{
 			newpath = pathdup(lemin->roomcount + 1, path, adjacent);
 			q_append(q, newpath);
@@ -85,7 +88,7 @@ static void updatequeue(t_lemin *lemin, t_paths *q, int *path, t_bool *visited)
 ** The value returned will have lemin->roomcount size
 ** and all value unitialized will be set to -1
 */
-int		*bfs(t_lemin *lemin)
+int		*bfs(t_lemin *lemin, int **f)
 {
 	t_paths	q;
 	int		*path;
@@ -104,9 +107,11 @@ int		*bfs(t_lemin *lemin)
 		{
 			ft_memdel((void **)&visited);
 			q_destroy(&q);
+			ft_printf("Bfs path:\n");
+			printpath(path);
 			return (path);
 		}
-		updatequeue(lemin, &q, path, visited);
+		updatequeue(lemin, f, &q, path, visited);
 		ft_memdel((void **)&path);
 	}
 	ft_memdel((void **)&visited);
