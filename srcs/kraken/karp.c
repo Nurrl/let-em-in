@@ -6,13 +6,13 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/25 19:07:50 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/28 15:35:47 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static int *p_append(int *path, int toadd)
+static int		*p_append(int *path, int toadd)
 {
 	int	i;
 
@@ -24,7 +24,7 @@ static int *p_append(int *path, int toadd)
 	return (path);
 }
 
-static int *setpath(t_lemin *lemin, int **f, int pos, int *path)
+static int		*setpath(t_lemin *lemin, int **f, int pos, int *path)
 {
 	int	i;
 
@@ -63,59 +63,42 @@ static t_paths	*extractpaths(t_lemin *lemin, int **f)
 	return (batchpaths);
 }
 
-static void	printpaths(t_paths *paths)
+static t_bool	applyflow(int ***f, int *path)
 {
-	t_path *node;
+	int i;
 
-	node = paths->head;
-	ft_printf("Batch paths:\n");
-	while (node)
+	if (!path)
+		return (false);
+	i = 0;
+	while (path[++i] != -1)
 	{
-		if (!node->path)
-		{
-			ft_printf("\tpath is null\n");
-			break;
-		}
-		int len = 0;
-		for (len = 0; node->path[len] != -1; len++)
-			len++;
-		len--;
-		ft_printf("\t%p: ", node->path);
-
-		int i = 0;
-		for (i = 0; node->path[i] != -1 && i < 30; i++)
-		{
-			ft_printf("%4d ", node->path[i]);
-		}
-		if (i < len)
-			ft_printf("...(+%d/%d)", i, len);
-		ft_printf("\n");
-		node = node->next;
+		(*f)[path[i]][path[i - 1]] -= 1;
+		(*f)[path[i - 1]][path[i]] += 1;
 	}
+	free(path);
+	return (true);
 }
 
-t_paths	*karp(t_lemin *l)
+t_paths			*karp(t_lemin *l,
+		t_bool (*evalpacket)(t_lemin *lemin, t_paths *packet, t_paths *best))
 {
 	int		i;
-	int		**f; // Residual flow matrix / TODO: Free that shit
-	int		*path;
-	t_paths	*batchpaths;
+	int		**f; // Residual flow matrix
+	t_paths	*best;
+	t_paths	*current;
 
+	best = NULL;
 	if (!(f = (int **)ft_mk2array(l->roomcount, l->roomcount, sizeof(**f))))
 		return (NULL);
-	while ((path = bfs(l, f)))
+	while (applyflow(&f, bfs(l, f)))
 	{
-		i = 0;
-		while (path[++i] != -1)
-		{
-			f[path[i]][path[i - 1]] -= 1;
-			f[path[i - 1]][path[i]] += 1;
-//			ft_printf("loop, i=%d, path[i]= %d, path[i+1]= %d\n", i, path[i], path[i+1]);
-		}
-		ft_memdel((void **)&path);
-		batchpaths = extractpaths(l, f);
-		printpaths(batchpaths);
+		current = extractpaths(l, f);
+		if (evalpacket(l, current, best))
+			best = current;
 	}
-
-	return (batchpaths);
+	i = -1;
+	while (++i < l->roomcount)
+		free(f[i]);
+	free(f);
+	return (best);
 }

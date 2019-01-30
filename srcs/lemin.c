@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/25 17:30:00 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/28 15:33:18 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	exiterr(void)
 	return (1);
 }
 
-static void	printlines(t_lemin *lemin)
+void	printlines(t_lemin *lemin)
 {
 	t_line	*lines;
 	char	*l;
@@ -35,50 +35,96 @@ static void	printlines(t_lemin *lemin)
 	collectlines(lemin->lines);
 }
 
-// TODO: Handle if there no start or no end
-int			main(void)
+void	printpacket(t_lemin *l, t_paths *paths)
+{
+	t_path *node;
+
+	node = paths->head;
+	ft_printf("Packet:\n");
+	while (node)
+	{
+		if (!node->path)
+		{
+			ft_printf("\t{red}{shrug}{eoc}\n");
+			break;
+		}
+		int len = 0;
+		for (len = 0; node->path[len] != -1; len++)
+			len++;
+		len--;
+		ft_printf("\t%p: ", node->path);
+
+		int i = 0;
+		for (i = 0; node->path[i] != -1 && i < 18; i++)
+		{
+			if (node->path[i] == l->startid)
+				ft_printf("{green}");
+			if (node->path[i] == l->endid)
+				ft_printf("{red}");
+			ft_printf("%s{eoc}", l->rooms[node->path[i]].name);
+			if (node->path[i + 1] != -1)
+				ft_printf(" > ");
+		}
+		if (i < len)
+			ft_printf("...(+%d/%d)", i, len);
+		ft_printf("\n");
+		node = node->next;
+	}
+}
+
+/*
+** Flow factor of packet:
+** (pathtotlen + antcount) / pathcount
+*/
+
+static float	flowfactor(t_lemin *l, t_paths *p)
+{
+	float	factor;
+	int		totlen;
+	int		pathcount;
+	t_path	*cur;
+	int		i;
+
+	totlen = 0;
+	pathcount = 0;
+	cur = p->head;
+	while (cur)
+	{
+		i = -1;
+		while (cur->path[++i] != -1)
+			totlen++;
+		cur = cur->next;
+		pathcount++;
+	}
+	factor = (totlen + l->antcount) / pathcount;
+	return (factor);
+}
+
+static t_bool	evalpacket(t_lemin *l, t_paths *packet, t_paths *best)
+{
+	float	pflow;
+	float	bflow;
+
+	printpacket(l, packet);
+	if (!best)
+		return (true);
+	pflow = flowfactor(l, packet);
+	bflow = flowfactor(l, best);
+	return ((pflow < bflow) ? true : false);
+}
+
+int				main(void)
 {
 	static t_lemin	lemin;
-//	int				*path;
+	static t_paths	*packet;
 
 	if (!parser(&lemin) && collectlines(lemin.lines))
 		return (exiterr());
-	if (!(karp(&lemin)) && collectlines(lemin.lines))
+	if (!(packet = karp(&lemin, &evalpacket)) && collectlines(lemin.lines))
 		return (exiterr());
-//	printlines(&lemin);
-
-// Debug
-//	int		i;
-	// int		x;
-	// int		y;
-	// ft_printf("{red}---{eoc}\nAnts: %d, Rooms: %d.\n", lemin.antcount, lemin.roomcount);
-	// i = -1;
-	// while (++i < lemin.roomcount)
-	// {
-	// 	ft_printf("Id: %d, Name: %s, Pos: {%d, %d}\n", lemin.rooms[i].id,
-	// 		lemin.rooms[i].name, lemin.rooms[i].x, lemin.rooms[i].y);
-	// }
-	// y = -1;
-	// while (++y < lemin.roomcount && (x = -1) == -1)
-	// {
-	// 	while (++x < lemin.roomcount)
-	// 		ft_printf("%d ", lemin.tubes[y][x]);
-	// 	ft_printf("\n");
-	// }
-// Debug
-
-//	i = -1;
-//	ft_printf("[");
-//	while (path[++i] != -1)
-//	{
-//		// ft_printf("%s", lemin.rooms[path[i]].name);
-//		// ft_printf("/");
-//		ft_printf("%d", path[i]);
-//		if (path[i+1] != -1)
-//			ft_printf(", ", path[i]);
-//	}
-//	ft_printf("]\n");
-//	ft_memdel((void **)&path);
+	/* printlines(&lemin); */
+	ft_printf("The {lightmagenta}lovely{eoc} packet:\n");
+	printpacket(&lemin, packet);
 	/* Clear the structure (free) */
 	return (0);
 }
