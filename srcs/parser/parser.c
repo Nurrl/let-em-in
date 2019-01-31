@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 15:04:26 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/23 19:16:11 by glodi            ###   ########.fr       */
+/*   Updated: 2019/01/31 15:10:48 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin)
 	if (!(cur = ft_calloc(1, sizeof(*cur))))
 		return (-1);
 	cur->line = *line;
-	if (!lemin->lines)
+	if (!lemin->kr.lines)
 	{
-		lemin->lines = cur;
-		lemin->lend = cur;
+		lemin->kr.lines = cur;
+		lemin->kr.lend = cur;
 	}
 	else
 	{
-		lemin->lend->next = cur;
-		lemin->lend = cur;
+		lemin->kr.lend->next = cur;
+		lemin->kr.lend = cur;
 	}
 	return (rt);
 }

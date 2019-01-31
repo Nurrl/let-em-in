@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/28 15:37:35 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/31 19:15:12 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ static int	*pathdup(int size, int *path, int toadd)
 	return (newpath);
 }
 
-static void	updatequeue(t_lemin *lemin, int **f, t_paths *q,
+static void	updatequeue(t_lemin *lemin, t_paths *q,
 		int *path, t_bool *visited)
 {
 	int	adjacent;
-	int room;
+	int roomid;
 	int	*newpath;
 
-	room = lastroom(path, lemin->roomcount);
+	roomid = lastroom(path, lemin->roomcount);
 	adjacent = -1;
 	while (++adjacent < lemin->roomcount)
 	{
-		if (lemin->tubes[room][adjacent] == 1
-			&& f[room][adjacent] != 1
+		if (lemin->tubes[roomid][adjacent] == 1
+			&& lemin->flows[roomid][adjacent] != 1
 			&& visited[adjacent] == false)
 		{
 			newpath = pathdup(lemin->roomcount + 1, path, adjacent);
@@ -79,7 +79,7 @@ int			*initpath(int count, size_t size)
 ** and all value unitialized will be set to -1
 */
 
-int			*bfs(t_lemin *lemin, int **f)
+int			*bfs(t_lemin *lemin)
 {
 	t_paths	q;
 	int		*path;
@@ -100,7 +100,7 @@ int			*bfs(t_lemin *lemin, int **f)
 			q_destroy(&q);
 			return (path);
 		}
-		updatequeue(lemin, f, &q, path, visited);
+		updatequeue(lemin, &q, path, visited);
 		ft_memdel((void **)&path);
 	}
 	ft_memdel((void **)&visited);

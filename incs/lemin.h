@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/28 14:02:22 by lroux            ###   ########.fr       */
+/*   Updated: 2019/01/31 15:09:29 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,26 @@ typedef struct	s_rooms {
 	t_room		*end;
 }				t_rooms;
 
+typedef struct	s_kraken {
+	float		bestflow;
+
+	t_line		*lines;
+	t_line		*lend;
+}				t_kraken;
+
 typedef struct	s_lemin {
 	int			antcount;
 
 	int			roomcount;
-	t_room		*rooms; // Array of rooms
+	t_room		*rooms;
 	int			startid;
 	int			endid;
 
 	int			**tubes;
-	t_line		*lines;
-	t_line		*lend;
+	int			**flows;
+	int			turns;
+
+	t_kraken	kr;
 }				t_lemin;
 
 /*
@@ -66,7 +75,7 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin);
 ** Kraken functions
 */
 
-int				*bfs(t_lemin *lemin, int **f);
+int				*bfs(t_lemin *lemin);
 t_paths			*karp(t_lemin *l,
 		t_bool (*evalpacket)(t_lemin *lemin, t_paths *packet, t_paths *best));
 int				*initpath(int count, size_t size);
