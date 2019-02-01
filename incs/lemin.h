@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/31 15:09:29 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/01 14:58:18 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,8 @@ int				*initpath(int count, size_t size);
 
 t_bool			collectlines(t_line *lines);
 
+/*
+** Utils functions
+*/
+void		printmatrix(int **f, size_t size);
 #endif

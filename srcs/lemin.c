@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/31 19:23:50 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/01 18:11:30 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	printpacket(t_lemin *l, t_paths *paths)
 	t_path *node;
 
 	node = paths->head;
-	ft_printf("Packet: (%p)\n", node);
+	ft_printf("Packet: ({red}%p{eoc})\n", node);
 	while (node)
 	{
 		if (!node->path)
@@ -52,7 +52,7 @@ void	printpacket(t_lemin *l, t_paths *paths)
 		for (len = 0; node->path[len] != -1; len++)
 			len++;
 		len--;
-		ft_printf("\t%p: ", node->path);
+		ft_printf("\t{lightmagenta}%p{eoc}: ", node->path);
 
 		int i = 0;
 		for (i = 0; node->path[i] != -1; i++)
@@ -65,8 +65,7 @@ void	printpacket(t_lemin *l, t_paths *paths)
 			if (node->path[i + 1] != -1)
 				ft_printf(" > ");
 		}
-		if (i < len)
-			ft_printf("...(+%d/%d)", i, len);
+		ft_printf("({blue}%d{eoc})", i, len);
 		ft_printf("\n");
 		node = node->next;
 	}
@@ -124,9 +123,11 @@ int				main(void)
 
 	if (!parser(&lemin) && collectlines(lemin.kr.lines))
 		return (exiterr());
+//	printmatrix(lemin.tubes, lemin.roomcount);
+	ft_dprintf(stderr, "start = %s, end = %s\n", lemin.rooms[lemin.startid].name, lemin.rooms[lemin.endid].name);
 	if (!(packet = karp(&lemin, &evalpacket)) && collectlines(lemin.kr.lines))
 		return (exiterr());
-	printlines(&lemin);
+//	printlines(&lemin);
 	ft_printf("The {lightmagenta}lovely{eoc} packet: Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
 	printpacket(&lemin, packet);
 	/* Clear the structure (free) */

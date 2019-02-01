@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/31 19:15:12 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/01 18:50:14 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static int	lastroom(int *path, int size)
 	i = -1;
 	while (path[++i] != -1 && i < size)
 		;
-	if (i > 1)
+	if (i >= 1)
 		return (path[i - 1]);
-	return (0);
+	return (-1);
 }
 
 static int	*pathdup(int size, int *path, int toadd)
@@ -49,6 +49,8 @@ static void	updatequeue(t_lemin *lemin, t_paths *q,
 	int	*newpath;
 
 	roomid = lastroom(path, lemin->roomcount);
+	if (roomid == -1)
+		return ;
 	adjacent = -1;
 	while (++adjacent < lemin->roomcount)
 	{
@@ -72,6 +74,17 @@ int			*initpath(int count, size_t size)
 	while (--count > -1)
 		path[count] = -1;
 	return (path);
+}
+
+static void		printpath(int *path)
+{
+	int i;
+
+	i = -1;
+	ft_dprintf(stderr, "%p ", path);
+	while (path[++i] >= 0)
+		ft_dprintf(2, "%d > ", path[i]);
+	ft_dprintf(2, "\n");
 }
 
 /*
@@ -98,6 +111,7 @@ int			*bfs(t_lemin *lemin)
 		{
 			ft_memdel((void **)&visited);
 			q_destroy(&q);
+//			printpath(path);
 			return (path);
 		}
 		updatequeue(lemin, &q, path, visited);

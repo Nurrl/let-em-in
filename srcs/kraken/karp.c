@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/01/31 19:20:18 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/01 18:36:39 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static t_paths	*extractpaths(t_lemin *lemin, int **f)
 	return (batchpaths);
 }
 
-static void		printmatrix(int **f, size_t size)
+void		printmatrix(int **f, size_t size)
 {
 	int i;
 	int y;
@@ -71,11 +71,11 @@ static void		printmatrix(int **f, size_t size)
 		while (++y < size)
 		{
 			if (f[i][y] == -1)
-				ft_printf("-1", f[i][y]);
+				ft_printf(" -1", f[i][y]);
 			else if (f[i][y] == 1)
-				ft_printf(" 1", f[i][y]);
+				ft_printf("  1", f[i][y]);
 			else
-				ft_printf(" 0", f[i][y]);
+				ft_printf("  0", f[i][y]);
 		}
 		ft_printf("\n");
 	}
@@ -97,6 +97,32 @@ static t_bool	applyflow(int **f, int *path)
 	return (true);
 }
 
+static void	checkduplicate(t_lemin *l, t_paths *paths)
+{
+	int *seen = calloc(sizeof(l->roomcount), sizeof(*seen));
+	t_path *node;
+
+	node = paths->head;
+	while (node)
+	{
+		for (int i = 1; node->path[i + 1] != -1; i++) // From start + 1 to end - 1
+		{
+			if (seen[node->path[i]] == 1)
+			{
+//				printmatrix(l->flows, l->roomcount);
+				ft_dprintf(stderr, "{red}Invalid packet %p:{eoc}\
+ duplication of rooms nº%d (%s) on path %p\n", paths, i, l->rooms[i].name, node);
+//				printpacket(l, paths);
+				return ;
+			}
+			else
+				seen[node->path[i]] = 1;
+		}
+		node = node->next;
+	}
+	ft_dprintf(stderr, "{green}Valid packet %p{eoc}\n", paths);
+//		printpacket(l, paths);
+}
 t_paths			*karp(t_lemin *l,
 		t_bool (*evalpacket)(t_lemin *lemin, t_paths *packet, t_paths *best))
 {
@@ -112,6 +138,7 @@ t_paths			*karp(t_lemin *l,
 	while (applyflow(l->flows, bfs(l)))
 	{
 		current = extractpaths(l, l->flows);
+		checkduplicate(l, current);
 		if (evalpacket(l, current, best))
 			best = current;
 		//printmatrix(l->flows, l->roomcount);
