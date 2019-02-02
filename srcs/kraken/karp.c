@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/01 18:36:39 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/02 17:28:59 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static t_bool	applyflow(int **f, int *path)
 
 static void	checkduplicate(t_lemin *l, t_paths *paths)
 {
-	int *seen = calloc(sizeof(l->roomcount), sizeof(*seen));
+	int *seen = calloc(l->roomcount, sizeof(*seen));
 	t_path *node;
 
 	node = paths->head;
