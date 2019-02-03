@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/01 18:50:14 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/03 19:53:15 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,23 @@ static int	lastroom(int *path, int size)
 {
 	int i;
 
-	if (!path)
+	if (!path || path[0] == -1)
 		return (-1);
 	i = -1;
 	while (path[++i] != -1 && i < size)
 		;
-	if (i >= 1)
-		return (path[i - 1]);
-	return (-1);
+	return (path[i - 1]);
+}
+
+int			*initpath(int count, size_t size)
+{
+	int *path;
+
+	if (!(path = malloc(count * size)))
+		return (NULL);
+	while (--count > -1)
+		path[count] = -1;
+	return (path);
 }
 
 static int	*pathdup(int size, int *path, int toadd)
@@ -31,7 +40,7 @@ static int	*pathdup(int size, int *path, int toadd)
 	int *newpath;
 	int	i;
 
-	if (!(newpath = ft_calloc(size, sizeof(*newpath))))
+	if (!(newpath = malloc(size * sizeof(*newpath))))
 		return (NULL);
 	ft_memcpy(newpath, path, size * sizeof(*newpath));
 	i = -1;
@@ -56,27 +65,22 @@ static void	updatequeue(t_lemin *lemin, t_paths *q,
 	{
 		if (lemin->tubes[roomid][adjacent] == 1
 			&& lemin->flows[roomid][adjacent] != 1
-			&& visited[adjacent] == false)
+			&& !visited[adjacent])
 		{
+			//if (ft_strequ("Saw7", lemin->rooms[path[adjacent]].name))
+			//	ft_printf("\nFuck\n\n");
 			newpath = pathdup(lemin->roomcount + 1, path, adjacent);
+			//int i = -1;
+			//while (path[++i] != -1)
+			//	if (ft_strequ("Saw7", lemin->rooms[path[i]].name))
+			//		ft_printf("\nFuck^2\n\n");
 			q_append(q, newpath);
 			visited[adjacent] = true;
 		}
 	}
 }
 
-int			*initpath(int count, size_t size)
-{
-	int *path;
-
-	if (!(path = malloc(count * size)))
-		return (NULL);
-	while (--count > -1)
-		path[count] = -1;
-	return (path);
-}
-
-static void		printpath(int *path)
+void		printpath(int *path)
 {
 	int i;
 
@@ -105,18 +109,18 @@ int			*bfs(t_lemin *lemin)
 		return (NULL);
 	path[0] = lemin->startid;
 	q_append(&q, path);
+	visited[lemin->startid] = true;
 	while ((path = q_pophead(&q)))
 	{
 		if (lastroom(path, lemin->roomcount) == lemin->endid)
 		{
-			ft_memdel((void **)&visited);
+			free(visited);
 			q_destroy(&q);
-//			printpath(path);
+			//printpath(path);
 			return (path);
 		}
 		updatequeue(lemin, &q, path, visited);
-		ft_memdel((void **)&path);
+		free(path);
 	}
-	ft_memdel((void **)&visited);
 	return (NULL);
 }

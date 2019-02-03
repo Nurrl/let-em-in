@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/01 14:58:18 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/03 20:05:52 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ t_bool			collectlines(t_line *lines);
 /*
 ** Utils functions
 */
-void		printmatrix(int **f, size_t size);
+void		printmatrix(int **f, int size);
 #endif
