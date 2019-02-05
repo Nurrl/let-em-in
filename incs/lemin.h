@@ -6,14 +6,14 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/03 20:05:52 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/06 00:08:18 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN_H
 # define LEMIN_H
 
-# include "kraken.h"
+# include "ll.h"
 # include <libft.h>
 # include <libpf.h>
 # include <gnl.h>
@@ -63,6 +63,12 @@ typedef struct	s_lemin {
 }				t_lemin;
 
 /*
+** TODO: typedef t_node t_path;
+** TODO: typedef t_node t_packet;
+*/
+
+
+/*
 ** Parsing functions
 */
 
@@ -75,9 +81,9 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin);
 ** Kraken functions
 */
 
-int				*bfs(t_lemin *lemin);
-t_paths			*karp(t_lemin *l,
-		t_bool (*evalpacket)(t_lemin *lemin, t_paths *packet, t_paths *best));
+t_node			*bfs(t_lemin *lemin);
+t_node			*karp(t_lemin *l,
+		t_bool (*evalpacket)(t_lemin *lemin, t_node *packet, t_node *best));
 int				*initpath(int count, size_t size);
 
 /*
@@ -87,7 +93,14 @@ int				*initpath(int count, size_t size);
 t_bool			collectlines(t_line *lines);
 
 /*
-** Utils functions
+** Debug functions
 */
-void		printmatrix(int **f, int size);
+
+void			printpath(t_lemin *l, t_node *path);
+void			printmatrix(int **f, int size);
+void			bprintmatrix(t_lemin *lemin, int **f, int size);
+void			checkduplicate(t_lemin *l, t_node *paths);
+void			printlines(t_lemin *lemin);
+void			printpacket(t_lemin *l, t_node *paths);
+
 #endif

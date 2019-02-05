@@ -6,25 +6,13 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/03 20:38:25 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/06 00:25:42 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static int		*p_append(int *path, int toadd)
-{
-	int	i;
-
-	i = -1;
-	while (path[++i] != -1)
-		;
-	path[i] = toadd;
-	path[i + 1] = -1;
-	return (path);
-}
-
-static int		*setpath(t_lemin *lemin, int **f, int pos, int *path)
+static t_node	*setpath(t_lemin *lemin, int **f, int pos, t_node *path)
 {
 	int	i;
 
@@ -33,143 +21,64 @@ static int		*setpath(t_lemin *lemin, int **f, int pos, int *path)
 	i = -1;
 	while (++i < lemin->roomcount && f[pos][i] != 1)
 		;
-	return (setpath(lemin, f, i, p_append(path, i)));
+	ll_add(&path, (t_data)i);
+	return (setpath(lemin, f, i, path));
 }
 
-void		bprintmatrix(t_lemin *l, int **f, int size)
-{
-	int i;
-	int y;
-
-	i = -1;
-	while (++i < size && (y = -1) == -1)
-	{
-		t_bool sw = false;
-
-		while (++y < size)
-			if (f[i][y])
-				sw = true;
-		if (sw)
-			ft_printf("(%s): ", l->rooms[i].name);
-		y = -1;
-		while (++y < size)
-		{
-			if (f[i][y])
-				ft_printf(" % d(`%s`)", f[i][y], l->rooms[y].name);
-		}
-		if (i == l->startid)
-			ft_printf(" <- start");
-		if (i == l->endid)
-			ft_printf(" <- end");
-		if (sw)
-			ft_printf("\n");
-	}
-}
-
-static t_paths	*extractpaths(t_lemin *lemin, int **f)
+static t_node	*extractpaths(t_lemin *lemin, int **f)
 {
 	int		i;
-	int		*path;
-	t_paths	*batchpaths;
+	t_node	*path;
+	t_node	*batchpaths;
 
-	bprintmatrix(lemin, f, lemin->roomcount);
+	printmatrix(f, lemin->roomcount);
 
-	if (!(batchpaths = ft_calloc(1, sizeof(*batchpaths))))
-		return (NULL);
 	i = -1;
 	while (++i < lemin->roomcount)
 	{
 		if (f[lemin->startid][i] == 1)
 		{
-			if (!(path = initpath(lemin->roomcount + 1, sizeof(*path))))
-				return (NULL);
-			path[0] = lemin->startid;
-			path[1] = i;
+			ll_add(&path, (t_data)lemin->startid);
+			ll_add(&path, (t_data)i);
 			path = setpath(lemin, f, i, path);
-			q_append(batchpaths, path);
+			ll_add(&batchpaths, (t_data)(void *)path);
 		}
 	}
 	return (batchpaths);
 }
 
-void		printmatrix(int **f, int size)
+static t_bool	applyflow(t_lemin *lemin, t_node *path)
 {
-	int i;
-	int y;
+	int		curr;
+	int		next;
 
-	i = -1;
-	while (++i < size && (y = -1) == -1)
+	printpath(lemin, path);
+	curr = ll_pop(&path, 0).i;
+	while ((next = ll_pop(&path, 0).i))
 	{
-		while (++y < size)
-		{
-			if (f[i][y] == -1)
-				ft_printf(" -1", f[i][y]);
-			else if (f[i][y] == 1)
-				ft_printf("  1", f[i][y]);
-			else
-				ft_printf("  0", f[i][y]);
-		}
-		ft_printf("\n");
+		lemin->flows[next][curr] -= 1;
+		lemin->flows[curr][next] += 1;
+		curr = next;
 	}
-}
-
-static t_bool	applyflow(t_lemin *l, int **f, int *path)
-{
-	int i;
-
-	if (!path)
-		return (false);
-	i = 0;
-	while (path[++i] != -1)
-	{
-		f[path[i]][path[i - 1]] -= 1;
-		f[path[i - 1]][path[i]] += 1;
-	}
-	free(path);
 	return (true);
 }
 
-static void	checkduplicate(t_lemin *l, t_paths *paths)
-{
-	int *seen = calloc(l->roomcount, sizeof(*seen));
-	t_path *node;
-
-	node = paths->head;
-	while (node)
-	{
-		for (int i = 1; node->path[i + 1] != -1; i++) // From start + 1 to end - 1
-		{
-			if (seen[node->path[i]] == 1)
-			{
-				//				printmatrix(l->flows, l->roomcount);
-				ft_dprintf(stderr, "{red}Invalid packet %p:{eoc}"\
-				" duplication of rooms nº%d (%s) on path %p at position: %d\n", paths->head, node->path[i], l->rooms[node->path[i]].name, node->path, i);
-				//				printpacket(l, paths);
-				return ;
-			}
-			else
-				seen[node->path[i]] = 1;
-		}
-		node = node->next;
-	}
-	ft_dprintf(stderr, "{green}Valid packet %p{eoc}\n", paths);
-			//printpacket(l, paths);
-}
-t_paths			*karp(t_lemin *l,
-		t_bool (*evalpacket)(t_lemin *lemin, t_paths *packet, t_paths *best))
+t_node			*karp(t_lemin *l,
+		t_bool (*evalpacket)(t_lemin *lemin, t_node *packet, t_node *best))
 {
 	int		i;
-	t_paths	*best;
-	t_paths	*current;
+	t_node	*best;
+	t_node	*current;
 
 	best = NULL;
 	if (!(l->flows = (int **)ft_mk2array(
 			l->roomcount, l->roomcount, sizeof(**l->flows))))
 		return (NULL);
-	while (applyflow(l, l->flows, bfs(l)))
+	while (applyflow(l, bfs(l)))
 	{
+		ft_printf("Packet: ({red}%p{eoc})\n", l);
 		current = extractpaths(l, l->flows);
-		checkduplicate(l, current);
+//		checkduplicate(l, current);
 		if (evalpacket(l, current, best))
 			best = current;
 		//bprintmatrix(l, l->flows, l->roomcount);

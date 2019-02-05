@@ -6,121 +6,70 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/03 19:53:15 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/06 00:53:48 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static int	lastroom(int *path, int size)
+static void	updatequeue(t_lemin *lemin, t_node **q,
+		t_node *path, t_bool *visited)
 {
-	int i;
+	//int prev;
+	int		next;
+	int		current;
+	t_node	*newpath;
 
-	if (!path || path[0] == -1)
-		return (-1);
-	i = -1;
-	while (path[++i] != -1 && i < size)
-		;
-	return (path[i - 1]);
-}
-
-int			*initpath(int count, size_t size)
-{
-	int *path;
-
-	if (!(path = malloc(count * size)))
-		return (NULL);
-	while (--count > -1)
-		path[count] = -1;
-	return (path);
-}
-
-static int	*pathdup(int size, int *path, int toadd)
-{
-	int *newpath;
-	int	i;
-
-	if (!(newpath = malloc(size * sizeof(*newpath))))
-		return (NULL);
-	ft_memcpy(newpath, path, size * sizeof(*newpath));
-	i = -1;
-	while (newpath[++i] != -1 && i < size)
-		;
-	newpath[i] = toadd;
-	return (newpath);
-}
-
-static void	updatequeue(t_lemin *lemin, t_paths *q,
-		int *path, t_bool *visited)
-{
-	int	adjacent;
-	int roomid;
-	int	*newpath;
-
-	roomid = lastroom(path, lemin->roomcount);
-	if (roomid == -1)
+	//prev = (int)ll_get(path, -2)->data;
+	current = (int)ll_get(path, -1)->data;
+	if (current == -1)
 		return ;
-	adjacent = -1;
-	while (++adjacent < lemin->roomcount)
+	newpath = 0;
+	next = -1;
+	while (++next < lemin->roomcount)
 	{
-		if (lemin->tubes[roomid][adjacent] == 1
-			&& lemin->flows[roomid][adjacent] != 1
-			&& !visited[adjacent])
+		if (lemin->tubes[current][next] == 1
+			&& lemin->flows[current][next] != 1 // E.g. == -1 || == 0
+			&& !visited[next])
 		{
-			//if (ft_strequ("Saw7", lemin->rooms[path[adjacent]].name))
-			//	ft_printf("\nFuck\n\n");
-			newpath = pathdup(lemin->roomcount + 1, path, adjacent);
-			//int i = -1;
-			//while (path[++i] != -1)
-			//	if (ft_strequ("Saw7", lemin->rooms[path[i]].name))
-			//		ft_printf("\nFuck^2\n\n");
-			q_append(q, newpath);
-			visited[adjacent] = true;
+			newpath = ll_dup(path);
+			ll_addint(&newpath, next);
+			ll_add(q, (void *)newpath);
+			printpath(lemin, newpath);
+			visited[next] = true;
 		}
 	}
-}
-
-void		printpath(int *path)
-{
-	int i;
-
-	i = -1;
-	ft_dprintf(stderr, "%p ", path);
-	while (path[++i] >= 0)
-		ft_dprintf(2, "%d > ", path[i]);
-	ft_dprintf(2, "\n");
 }
 
 /*
 ** The value returned will have lemin->roomcount size
 ** and all value unitialized will be set to -1
 */
-
-int			*bfs(t_lemin *lemin)
+t_node		*bfs(t_lemin *lemin)
 {
-	t_paths	q;
-	int		*path;
+	t_node	*q;
+	t_node	*path;
 	t_bool	*visited;
 
-	q = (t_paths){0, 0};
 	if (!(visited = ft_calloc(lemin->roomcount, sizeof(*visited))))
 		return (NULL);
-	if (!(path = initpath(lemin->roomcount + 1, sizeof(*path))))
-		return (NULL);
-	path[0] = lemin->startid;
-	q_append(&q, path);
+	q = 0;
+	path = 0;
+	ll_addint(&path, lemin->startid);
+	ll_add(&q, path);
 	visited[lemin->startid] = true;
-	while ((path = q_pophead(&q)))
+	while ((path = ll_pop(&q, 0)))
 	{
-		if (lastroom(path, lemin->roomcount) == lemin->endid)
+		ft_printf("->>> (%d)\n", ll_get(path, -1));
+		if (*((int*)ll_get(path, -1)->data) == lemin->endid)
 		{
+			/* TODO: Free queue */
 			free(visited);
-			q_destroy(&q);
-			//printpath(path);
 			return (path);
 		}
 		updatequeue(lemin, &q, path, visited);
-		free(path);
+		ft_printf("<<<- (%d)\n", (int)*(ll_get(path, -1)->data));
+		/* TODO: Free path */
 	}
 	return (NULL);
 }
