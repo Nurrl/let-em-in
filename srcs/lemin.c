@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/05 22:12:25 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 13:53:49 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static float	flowfactor(t_lemin *l, t_node *packet)
 	curr = packet;
 	while (true)
 	{
-		totcount += ll_len(curr);
+		totcount += ll_len(curr->data);
 		curr = curr->next;
 		pathcount++;
 		if (curr == packet)
@@ -57,7 +57,7 @@ static t_bool	evalpacket(t_lemin *l, t_node *packet, t_node *best)
 	return (isbest);
 }
 
-void	printlines(t_lemin *lemin)
+static void	printlines(t_lemin *lemin)
 {
 	t_line	*lines;
 	char	*l;

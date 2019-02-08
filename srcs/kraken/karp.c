@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/06 00:25:42 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 14:23:26 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_node	*setpath(t_lemin *lemin, int **f, int pos, t_node *path)
 	i = -1;
 	while (++i < lemin->roomcount && f[pos][i] != 1)
 		;
-	ll_add(&path, (t_data)i);
+	ll_add(&path, &lemin->rooms[i]);
 	return (setpath(lemin, f, i, path));
 }
 
@@ -31,17 +31,17 @@ static t_node	*extractpaths(t_lemin *lemin, int **f)
 	t_node	*path;
 	t_node	*batchpaths;
 
-	printmatrix(f, lemin->roomcount);
-
+	batchpaths = NULL;
 	i = -1;
 	while (++i < lemin->roomcount)
 	{
 		if (f[lemin->startid][i] == 1)
 		{
-			ll_add(&path, (t_data)lemin->startid);
-			ll_add(&path, (t_data)i);
+			path = NULL;
+			ll_add(&path, &lemin->rooms[lemin->startid]);
+			ll_add(&path, &lemin->rooms[i]);
 			path = setpath(lemin, f, i, path);
-			ll_add(&batchpaths, (t_data)(void *)path);
+			ll_add(&batchpaths, path);
 		}
 	}
 	return (batchpaths);
@@ -49,15 +49,16 @@ static t_node	*extractpaths(t_lemin *lemin, int **f)
 
 static t_bool	applyflow(t_lemin *lemin, t_node *path)
 {
-	int		curr;
-	int		next;
+	t_room *curr;
+	t_room *next;
 
-	printpath(lemin, path);
-	curr = ll_pop(&path, 0).i;
-	while ((next = ll_pop(&path, 0).i))
+	if (!path)
+		return (false);
+	curr = ll_pop(&path, 0);
+	while ((next = ll_pop(&path, 0)))
 	{
-		lemin->flows[next][curr] -= 1;
-		lemin->flows[curr][next] += 1;
+		lemin->flows[next->id][curr->id] -= 1;
+		lemin->flows[curr->id][next->id] += 1;
 		curr = next;
 	}
 	return (true);
@@ -76,12 +77,10 @@ t_node			*karp(t_lemin *l,
 		return (NULL);
 	while (applyflow(l, bfs(l)))
 	{
-		ft_printf("Packet: ({red}%p{eoc})\n", l);
 		current = extractpaths(l, l->flows);
-//		checkduplicate(l, current);
+		ft_printf("Packet: ({red}%p{eoc})\n", current);
 		if (evalpacket(l, current, best))
 			best = current;
-		//bprintmatrix(l, l->flows, l->roomcount);
 	}
 	i = -1;
 	while (++i < l->roomcount)

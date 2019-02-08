@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/06 00:08:18 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 14:06:01 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ void			printpath(t_lemin *l, t_node *path);
 void			printmatrix(int **f, int size);
 void			bprintmatrix(t_lemin *lemin, int **f, int size);
 void			checkduplicate(t_lemin *l, t_node *paths);
-void			printlines(t_lemin *lemin);
 void			printpacket(t_lemin *l, t_node *paths);
 
 #endif

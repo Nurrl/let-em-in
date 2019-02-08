@@ -6,20 +6,11 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:38:21 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/06 00:53:49 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 12:55:45 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ll.h"
-
-void	ll_addint(t_node **head, int i)
-{
-	int *data;
-	if (!data = malloc(sizeof(*data)))
-		return ;
-	*data = i;
-	ll_add(head, data);
-}
 
 void	ll_add(t_node **head, void *data)
 {

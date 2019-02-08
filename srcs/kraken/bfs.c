@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/06 00:53:48 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 14:35:34 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static void	updatequeue(t_lemin *lemin, t_node **q,
 	int		current;
 	t_node	*newpath;
 
-	//prev = (int)ll_get(path, -2)->data;
-	current = (int)ll_get(path, -1)->data;
+	//prev = ((t_room*)ll_get(path, -2)->data)->id;
+	current = ((t_room*)ll_get(path, -1)->data)->id;
 	if (current == -1)
 		return ;
 	newpath = 0;
@@ -29,13 +29,12 @@ static void	updatequeue(t_lemin *lemin, t_node **q,
 	while (++next < lemin->roomcount)
 	{
 		if (lemin->tubes[current][next] == 1
-			&& lemin->flows[current][next] != 1 // E.g. == -1 || == 0
+			&& lemin->flows[current][next] != 1
 			&& !visited[next])
 		{
 			newpath = ll_dup(path);
-			ll_addint(&newpath, next);
-			ll_add(q, (void *)newpath);
-			printpath(lemin, newpath);
+			ll_add(&newpath, &lemin->rooms[next]);
+			ll_add(q, newpath);
 			visited[next] = true;
 		}
 	}
@@ -55,20 +54,18 @@ t_node		*bfs(t_lemin *lemin)
 		return (NULL);
 	q = 0;
 	path = 0;
-	ll_addint(&path, lemin->startid);
+	ll_add(&path, &lemin->rooms[lemin->startid]);
 	ll_add(&q, path);
 	visited[lemin->startid] = true;
 	while ((path = ll_pop(&q, 0)))
 	{
-		ft_printf("->>> (%d)\n", ll_get(path, -1));
-		if (*((int*)ll_get(path, -1)->data) == lemin->endid)
+		if (((t_room*)ll_get(path, -1)->data)->id == lemin->endid)
 		{
 			/* TODO: Free queue */
 			free(visited);
 			return (path);
 		}
 		updatequeue(lemin, &q, path, visited);
-		ft_printf("<<<- (%d)\n", (int)*(ll_get(path, -1)->data));
 		/* TODO: Free path */
 	}
 	return (NULL);

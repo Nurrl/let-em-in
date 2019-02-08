@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 19:13:35 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/06 00:35:58 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/08 14:22:18 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ void		printpath(t_lemin *l, t_node *path)
 		//	ft_printf("{green}");
 		//if (node->path[i] == l->endid)
 		//	ft_printf("{red}");
-		ft_printf(" %s", l->rooms[(int)curr->data].name);
-		if (curr->next != curr->data)
-			ft_printf(" >");
+		ft_printf(" %s", ((t_room*)curr->data)->name);
 		curr = curr->next;
 		if (curr == path)
 			break ;
+		ft_printf(" >");
 	}
 	ft_printf("\n");
 }
@@ -112,7 +111,6 @@ void		printmatrix(int **f, int size)
 void	printpacket(t_lemin *l, t_node *packet)
 {
 	t_node *curr;
-	t_node *curr2;
 
 	curr = packet;
 	ft_printf("Packet: ({red}%p{eoc})\n", packet);
@@ -120,20 +118,7 @@ void	printpacket(t_lemin *l, t_node *packet)
 	{
 		ft_printf("\t{lightmagenta}%p{eoc}: ", curr->data);
 
-		curr2 = curr->data;
-		while (true)
-		{
-			//if (node->path[i] == l->startid)
-			//	ft_printf("{green}");
-			//if (node->path[i] == l->endid)
-			//	ft_printf("{red}");
-			ft_printf(" %s", l->rooms[(int)curr2->data].name);
-			if (curr2->next != curr->data)
-				ft_printf(" >");
-			curr2 = curr2->next;
-			if (curr2 == curr->data)
-				break ;
-		}
+		printpath(l, curr->data);
 		ft_printf("({blue}%d{eoc})", ll_len(curr));
 		ft_printf("\n");
 
