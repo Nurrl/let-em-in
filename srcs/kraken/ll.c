@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:38:21 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 12:55:45 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/09 07:05:06 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ void	ll_add(t_node **head, void *data)
 	(*head)->prev->next = new;
 	(*head)->prev = new;
 }
+
+void	ll_addfront(t_node **head, void *data)
+{
+	ll_add(head, data);
+	*head = (*head)->prev;
+}
+
+
 
 t_node	*ll_dup(t_node *head)
 {

@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:32:09 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 12:55:54 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/09 06:58:19 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct	s_node {
 }				t_node;
 
 void			ll_add(t_node **head, void *data);
+void			ll_addfront(t_node **head, void *data);
 t_node			*ll_dup(t_node *head);
 size_t			ll_len(t_node *head);
 t_node			*ll_get(t_node *head, int id);
