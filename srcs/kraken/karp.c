@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 14:23:26 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/09 04:48:53 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static t_bool	applyflow(t_lemin *lemin, t_node *path)
 	{
 		lemin->flows[next->id][curr->id] -= 1;
 		lemin->flows[curr->id][next->id] += 1;
+		lemin->flowvisited[curr->id] = true;
 		curr = next;
 	}
 	return (true);
@@ -72,13 +73,17 @@ t_node			*karp(t_lemin *l,
 	t_node	*current;
 
 	best = NULL;
+	if (!(l->flowvisited = ft_calloc(l->roomcount, sizeof(*l->flowvisited))))
+		return (NULL);
 	if (!(l->flows = (int **)ft_mk2array(
 			l->roomcount, l->roomcount, sizeof(**l->flows))))
 		return (NULL);
 	while (applyflow(l, bfs(l)))
 	{
 		current = extractpaths(l, l->flows);
-		ft_printf("Packet: ({red}%p{eoc})\n", current);
+//		ft_printf("Packet: ({red}%p{eoc})\n", current);
+		checkduplicate(l, current);
+//		printpacket(l, current);
 		if (evalpacket(l, current, best))
 			best = current;
 	}

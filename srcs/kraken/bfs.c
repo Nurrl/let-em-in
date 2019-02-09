@@ -6,34 +6,48 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 14:35:34 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/09 06:17:34 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
+static t_bool filter(t_lemin *lemin, t_node *path, int next)
+{
+	int		prev;
+	int		current;
+
+	prev = ((t_room*)ll_get(path, -2)->data)->id; // could cause problems
+	current = ((t_room*)ll_get(path, -1)->data)->id;
+	if (!lemin->tubes[current][next])
+		return (false);
+	if (!lemin->flowvisited[next]
+			&& lemin->flows[current][next] < 1)
+		return (true);
+	else if (lemin->flowvisited[next] && !lemin->flowvisited[prev]
+			&& lemin->flows[current][next] == -1)
+		return (true);
+	else if (lemin->flowvisited[next] && lemin->flowvisited[prev]
+			&& lemin->flows[current][next] < 1)
+		return (true);
+	else
+		return (false);
+}
 static void	updatequeue(t_lemin *lemin, t_node **q,
 		t_node *path, t_bool *visited)
 {
-	//int prev;
 	int		next;
-	int		current;
 	t_node	*newpath;
 
-	//prev = ((t_room*)ll_get(path, -2)->data)->id;
-	current = ((t_room*)ll_get(path, -1)->data)->id;
-	if (current == -1)
-		return ;
-	newpath = 0;
+	newpath = NULL;
 	next = -1;
 	while (++next < lemin->roomcount)
 	{
-		if (lemin->tubes[current][next] == 1
-			&& lemin->flows[current][next] != 1
-			&& !visited[next])
+		if (!visited[next] && filter(lemin, path, next))
 		{
 			newpath = ll_dup(path);
 			ll_add(&newpath, &lemin->rooms[next]);
+//			printpath(lemin, newpath);
 			ll_add(q, newpath);
 			visited[next] = true;
 		}
@@ -62,6 +76,7 @@ t_node		*bfs(t_lemin *lemin)
 		if (((t_room*)ll_get(path, -1)->data)->id == lemin->endid)
 		{
 			/* TODO: Free queue */
+			free(parents);
 			free(visited);
 			return (path);
 		}

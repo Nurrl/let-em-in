@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/08 14:06:01 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/08 23:56:14 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct	s_lemin {
 
 	int			**tubes;
 	int			**flows;
+	t_bool		*flowvisited;
 	int			turns;
 
 	t_kraken	kr;
