@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/10 02:55:29 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/10 04:13:22 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,16 @@ t_node	*pathfromparents(t_lemin *lemin, int *parents)
 	return (path);
 }
 
-static t_bool filter(t_lemin *lemin, int prev, int curr, int next)
+static t_bool filter(t_lemin *l, int prev, int curr, int next)
 {
-	if (!lemin->tubes[curr][next])
+	if (!l->tubes[curr][next])
 		return (false);
-//	if (curr == 2348)
-//	{
-//			ft_printf("{yellow}Prev = %s > Curr = %s > Next = %s{eoc}\n",
-//				lemin->rooms[prev].name, lemin->rooms[curr].name, lemin->rooms[next].name);
-//			ft_printf("{yellow}Flowvisited[next] = %d{eoc}\n", lemin->flowvisited[next]);
-//			ft_printf("{yellow}Flowvisited[prev] = %d{eoc}\n", lemin->flowvisited[prev]);
-//			ft_printf("{yellow}Flow[curr][next] = %d{eoc}\n", lemin->flows[curr][next]);
-////			printmatrix(lemin->flows, lemin->roomcount);
-//			// IDEA: Use flow instead of flowvisited :)
-//			// flowvisited[next] = flow[cur][next]
-//			// flowvisited[prev] = flow[prev][next]
-//	}
-	if (!lemin->flowvisited[curr]
-			&& lemin->flows[curr][next] == 0)
+	if (l->flows[prev][curr] == -1 && l->flows[curr][next] < 1)
 		return (true);
-	else if (lemin->flowvisited[curr] && !lemin->flowvisited[prev]
-			&& lemin->flows[curr][next] == -1)
+	else if (l->flows[prev][curr] == 0 && l->flows[curr][next] < 1)
 		return (true);
-	else if (lemin->flowvisited[curr] && lemin->flowvisited[prev]
-			&& lemin->flows[curr][next] < 1)
-		return (true);
-	else
-		return (false);
+	return (false);
+
 }
 
 static void	updatequeue(t_lemin *lemin, t_node **q,
