@@ -6,28 +6,61 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/09 07:05:04 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/10 02:55:29 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
+t_node	*pathfromparents(t_lemin *lemin, int *parents)
+{
+	t_node *path;
+	int id;
+
+	path = NULL;
+	id = lemin->endid;
+	while (id != lemin->startid)
+	{
+		ll_addfront(&path, &lemin->rooms[id]);
+//		ft_printf("%s > ", lemin->rooms[id].name);
+		id = parents[id];
+	}
+//	ft_printf("%s", lemin->rooms[id].name);
+//	ft_printf("\n");
+	if (id == lemin->startid)
+		ll_addfront(&path, &lemin->rooms[id]);
+	return (path);
+}
+
 static t_bool filter(t_lemin *lemin, int prev, int curr, int next)
 {
 	if (!lemin->tubes[curr][next])
 		return (false);
-	if (!lemin->flowvisited[next]
-			&& lemin->flows[curr][next] < 1)
+//	if (curr == 2348)
+//	{
+//			ft_printf("{yellow}Prev = %s > Curr = %s > Next = %s{eoc}\n",
+//				lemin->rooms[prev].name, lemin->rooms[curr].name, lemin->rooms[next].name);
+//			ft_printf("{yellow}Flowvisited[next] = %d{eoc}\n", lemin->flowvisited[next]);
+//			ft_printf("{yellow}Flowvisited[prev] = %d{eoc}\n", lemin->flowvisited[prev]);
+//			ft_printf("{yellow}Flow[curr][next] = %d{eoc}\n", lemin->flows[curr][next]);
+////			printmatrix(lemin->flows, lemin->roomcount);
+//			// IDEA: Use flow instead of flowvisited :)
+//			// flowvisited[next] = flow[cur][next]
+//			// flowvisited[prev] = flow[prev][next]
+//	}
+	if (!lemin->flowvisited[curr]
+			&& lemin->flows[curr][next] == 0)
 		return (true);
-	else if (lemin->flowvisited[next] && !lemin->flowvisited[prev]
+	else if (lemin->flowvisited[curr] && !lemin->flowvisited[prev]
 			&& lemin->flows[curr][next] == -1)
 		return (true);
-	else if (lemin->flowvisited[next] && lemin->flowvisited[prev]
+	else if (lemin->flowvisited[curr] && lemin->flowvisited[prev]
 			&& lemin->flows[curr][next] < 1)
 		return (true);
 	else
 		return (false);
 }
+
 static void	updatequeue(t_lemin *lemin, t_node **q,
 		t_room *room, t_bool *visited, int *parents)
 {
@@ -42,46 +75,13 @@ static void	updatequeue(t_lemin *lemin, t_node **q,
 	{
 		if (!visited[next] && filter(lemin, prev, curr, next))
 		{
+			ll_add(q, &lemin->rooms[next]);
 			parents[lemin->rooms[next].id] = lemin->rooms[curr].id;
-//			printpath(lemin, newpath);
-			ll_add(q, (void*)&lemin->rooms[next]);
 			visited[next] = true;
 		}
 	}
 }
 
-void	printparentspath(t_lemin *lemin, int *parents)
-{
-	int id;
-
-	id = lemin->endid;
-	while (id != lemin->startid)
-	{
-		ft_printf("%d > ", id);
-		id = parents[id];
-	}
-	ft_printf("%d", id);
-	ft_printf("\n");
-
-}
-
-t_node	*pathfromparents(t_lemin *lemin, int *parents)
-{
-	t_node *path;
-	int id;
-
-	path = NULL;
-	id = lemin->endid;
-	while (id != lemin->startid)
-	{
-		ll_addfront(&path, &lemin->rooms[id]);
-		ft_printf("%d > ", id);
-		id = parents[id];
-	}
-	ft_printf("%d", id);
-	ft_printf("\n");
-	return (path);
-}
 /*
 ** The value returned will have lemin->roomcount size
 ** and all value unitialized will be set to -1
@@ -105,7 +105,6 @@ t_node		*bfs(t_lemin *lemin)
 		if (room->id == lemin->endid)
 		{
 			/* TODO: Free queue */
-			free(parents);
 			free(visited);
 			return (pathfromparents(lemin, parents));
 		}

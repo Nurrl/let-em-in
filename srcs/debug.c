@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 19:13:35 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/09 07:05:07 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/10 02:46:20 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,29 @@ void		printmatrix(int **f, int size)
 {
 	int i;
 	int y;
+	t_bool	boule;
 
 	i = -1;
 	while (++i < size && (y = -1) == -1)
 	{
+		boule = false;
 		while (++y < size)
 		{
 			if (f[i][y] == -1)
+			{
 				ft_printf(" -1", f[i][y]);
+				boule = true;
+			}
 			else if (f[i][y] == 1)
+			{
 				ft_printf("  1", f[i][y]);
-			else
-				ft_printf("  0", f[i][y]);
+				boule = true;
+			}
+//			else
+//				ft_printf("  0", f[i][y]);
 		}
-		ft_printf("\n");
+		if (boule)
+			ft_printf("\n");
 	}
 }
 
@@ -92,6 +101,11 @@ void	checkduplicate(t_lemin *l, t_node *packet)
 	t_room	*r;
 
 	packet_tmp = packet;
+	if (!packet)
+	{
+		ft_dprintf(stderr, "{red}Error:{eoc} Packet can't be null\n");
+		return ;
+	}
 	ft_printf("Packet ({red}%p{eoc}): ", packet);
 	do {
 		room = ((t_node*)packet_tmp->data)->next; // From start + 1
@@ -103,6 +117,7 @@ void	checkduplicate(t_lemin *l, t_node *packet)
 				ft_printf("Error: duplication of rooms nº%d (%s) on path %p\n",
 						r->id, r->name, packet_tmp);
 				printpacket(l, packet);
+				exit(1);
 				return ;
 			}
 			else
