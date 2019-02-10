@@ -6,11 +6,26 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/09 06:17:34 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/11 00:17:25 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
+
+static	t_bool isvisited(t_lemin *lemin, int roomid)
+{
+	int	i;
+
+	i = -1;
+	if (roomid == lemin->startid || roomid == lemin->endid)
+		return (false);
+	while (++i < lemin->roomcount)
+	{
+		if (lemin->flows[roomid][i])
+			return (true);
+	}
+	return (false);
+}
 
 static t_bool filter(t_lemin *lemin, t_node *path, int next)
 {
@@ -21,13 +36,15 @@ static t_bool filter(t_lemin *lemin, t_node *path, int next)
 	current = ((t_room*)ll_get(path, -1)->data)->id;
 	if (!lemin->tubes[current][next])
 		return (false);
-	if (!lemin->flowvisited[next]
+	if (prev == current)
+		return (true);
+	if (!isvisited(lemin, next)
 			&& lemin->flows[current][next] < 1)
 		return (true);
-	else if (lemin->flowvisited[next] && !lemin->flowvisited[prev]
+	else if (isvisited(lemin, current) && !isvisited(lemin, prev)
 			&& lemin->flows[current][next] == -1)
 		return (true);
-	else if (lemin->flowvisited[next] && lemin->flowvisited[prev]
+	else if (isvisited(lemin, current) && isvisited(lemin, prev)
 			&& lemin->flows[current][next] < 1)
 		return (true);
 	else
@@ -76,7 +93,6 @@ t_node		*bfs(t_lemin *lemin)
 		if (((t_room*)ll_get(path, -1)->data)->id == lemin->endid)
 		{
 			/* TODO: Free queue */
-			free(parents);
 			free(visited);
 			return (path);
 		}

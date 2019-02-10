@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/09 04:48:53 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/10 23:56:15 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static t_bool	applyflow(t_lemin *lemin, t_node *path)
 	{
 		lemin->flows[next->id][curr->id] -= 1;
 		lemin->flows[curr->id][next->id] += 1;
-		lemin->flowvisited[curr->id] = true;
+		// lemin->flowvisited[curr->id] = true;
 		curr = next;
 	}
 	return (true);
