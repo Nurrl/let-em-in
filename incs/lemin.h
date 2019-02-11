@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/08 23:56:14 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/11 01:06:04 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct	s_lemin {
 
 	int			**tubes;
 	int			**flows;
-	t_bool		*flowvisited;
 	int			turns;
 
 	t_kraken	kr;
@@ -82,7 +81,7 @@ int				keepgnl(const int fd, char **line, t_lemin *lemin);
 ** Kraken functions
 */
 
-t_node			*bfs(t_lemin *lemin);
+t_bool			bfs(t_lemin *lemin, int *parents);
 t_node			*karp(t_lemin *l,
 		t_bool (*evalpacket)(t_lemin *lemin, t_node *packet, t_node *best));
 int				*initpath(int count, size_t size);
