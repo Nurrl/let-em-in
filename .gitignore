@@ -1,4 +1,4 @@
 objs/
 lem-in
 *.a
-*.dSYM
+*.dSYM/
