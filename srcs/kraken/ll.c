@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:38:21 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 12:55:45 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 16:02:22 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,10 @@ void	*ll_pop(t_node **head, int id)
 		*head = cur->next;
 	free(cur);
 	return (data);
+}
+
+t_bool	ll_del(t_node **head)
+{
+	(void)head;
+	return (true);
 }

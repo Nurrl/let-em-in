@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:32:09 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/08 12:55:54 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 16:02:39 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ t_node			*ll_dup(t_node *head);
 size_t			ll_len(t_node *head);
 t_node			*ll_get(t_node *head, int id);
 void			*ll_pop(t_node **head, int id);
+
+t_bool			ll_del(t_node **head);
 
 #endif

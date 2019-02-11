@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/11 01:06:04 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 18:03:11 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@
 # include <libft.h>
 # include <libpf.h>
 # include <gnl.h>
-
-typedef struct	s_line {
-	char			*line;
-	struct s_line	*next;
-}				t_line;
 
 typedef struct	s_room {
 	int				id;
@@ -42,15 +37,12 @@ typedef struct	s_rooms {
 
 typedef struct	s_kraken {
 	float		bestflow;
-
-	t_line		*lines;
-	t_line		*lend;
 }				t_kraken;
 
 typedef struct	s_lemin {
 	int			antcount;
-
 	int			roomcount;
+
 	t_room		*rooms;
 	int			startid;
 	int			endid;
@@ -59,6 +51,7 @@ typedef struct	s_lemin {
 	int			**flows;
 	int			turns;
 
+	t_node		*lines;
 	t_kraken	kr;
 }				t_lemin;
 
@@ -90,7 +83,6 @@ int				*initpath(int count, size_t size);
 ** Collector functions
 */
 
-t_bool			collectlines(t_line *lines);
 
 /*
 ** Debug functions

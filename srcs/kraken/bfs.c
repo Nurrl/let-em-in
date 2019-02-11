@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/11 03:53:50 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 18:21:06 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static t_bool	isflowing(t_lemin *lemin, int current)
 {
 	int i;
 
+	if (current == lemin->startid)
+		return (false);
 	i = -1;
 	while (++i < lemin->roomcount)
 		if (lemin->flows[current][i] != 0)
@@ -44,10 +46,11 @@ t_bool			bfs(t_lemin *lemin, int *parents)
 	t_node	*q;
 	int		i;
 
-	parents[lemin->startid] = -1;
+	ft_memset(parents, -1, lemin->roomcount * sizeof(*parents));
 	if (!(visited = ft_calloc(lemin->roomcount, sizeof(*visited))))
 		return (false);
 	q = 0;
+	visited[lemin->startid] = true;
 	ll_add(&q, &lemin->rooms[lemin->startid]);
 	while ((room = ll_pop(&q, 0)) && (i = -1) == -1)
 	{

@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 15:04:26 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/31 15:10:48 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 15:57:35 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,10 @@ static t_bool	parseants(t_lemin *lemin)
 int				keepgnl(const int fd, char **line, t_lemin *lemin)
 {
 	int		rt;
-	t_line	*cur;
 
 	if ((rt = gnl(fd, line)) == 0)
 		return (0);
-	if (!(cur = ft_calloc(1, sizeof(*cur))))
-		return (-1);
-	cur->line = *line;
-	if (!lemin->kr.lines)
-	{
-		lemin->kr.lines = cur;
-		lemin->kr.lend = cur;
-	}
-	else
-	{
-		lemin->kr.lend->next = cur;
-		lemin->kr.lend = cur;
-	}
+	ll_add(&lemin->lines, *line);
 	return (rt);
 }
 

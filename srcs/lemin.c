@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/09 05:17:48 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/11 17:57:20 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,12 @@ static t_bool	evalpacket(t_lemin *l, t_node *packet, t_node *best)
 
 static void	printlines(t_lemin *lemin)
 {
-	t_line	*lines;
-	char	*l;
+	char *l;
 
 	while (keepgnl(stdin, &l, lemin) > 0)
 		;
-	lines = lemin->kr.lines;
-	while (lines)
-	{
-		if (lines->line)
-			ft_printf("%s\n", lines->line);
-		lines = lines->next;
-	}
-	collectlines(lemin->kr.lines);
+	while ((l = ll_pop(&lemin->lines, 0)))
+		ft_printf("%s\n", l);
 }
 
 int				main(void)
@@ -80,9 +73,9 @@ int				main(void)
 	static t_lemin	lemin;
 	static t_node	*packet;
 
-	if (!parser(&lemin) && collectlines(lemin.kr.lines))
+	if (!parser(&lemin) && ll_del(&lemin.lines))
 		return (exiterr());
-	if (!(packet = karp(&lemin, &evalpacket)) && collectlines(lemin.kr.lines))
+	if (!(packet = karp(&lemin, &evalpacket)) && ll_del(&lemin.lines))
 		return (exiterr());
 	printlines(&lemin);
 
