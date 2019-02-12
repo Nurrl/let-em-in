@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/11 18:22:01 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 20:35:02 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ static t_bool	applyflow(t_lemin *lemin, int *parents, t_bool success)
 	id = lemin->endid;
 	while (id != lemin->startid)
 	{
-		ft_printf("%d {green}<<{eoc} ", id);
+//		ft_printf("%d {green}<<{eoc} ", id);
 		lemin->flows[id][parents[id]] -= 1;
 		lemin->flows[parents[id]][id] += 1;
 		id = parents[id];
 	}
-	ft_printf("%d\n", id);
+//	ft_printf("%d\n", id);
 	//printmatrix(lemin->flows, lemin->roomcount);
 	return (true);
 }
@@ -81,13 +81,18 @@ t_node			*karp(t_lemin *lemin,
 		return (NULL);
 	while (applyflow(lemin, parents, bfs(lemin, parents)))
 	{
-		// printmatrix(lemin->flows, lemin->roomcount);
 		current = extractpaths(lemin);
-//		ft_printf("Packet: ({red}%p{eoc})\n", current);
-		checkduplicate(lemin, current);
-		//printpacket(lemin, current);
+		// printmatrix(lemin->flows, lemin->roomcount);
+		// ft_printf("Packet: ({red}%p{eoc})\n", current);
+		// checkduplicate(lemin, current);
+		// printpacket(lemin, current);
 		if (evalpacket(lemin, current, best))
+		{
+			ft_printf("Packet {magenta}%p{eoc}: {green}Better{eoc}\n", current);
 			best = current;
+		}
+		else
+			ft_printf("Packet {magenta}%p{eoc}: Even\n", current);
 	}
 	i = -1;
 	while (++i < lemin->roomcount)

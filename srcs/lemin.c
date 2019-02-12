@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/11 17:57:20 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/12 03:27:08 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static float	flowfactor(t_lemin *l, t_node *packet)
 			break ;
 	}
 //	factor = ((totcount - (pathcount * 2)) + l->antcount) / pathcount; // Old forula
-	factor = ((totcount + l->antcount) / pathcount) - 1; // Xavier formula
+	factor = ((totcount + l->antcount) / pathcount - 1); // Xavier formula
 	return (factor);
 }
 
@@ -79,8 +79,10 @@ int				main(void)
 		return (exiterr());
 	printlines(&lemin);
 
-	ft_printf("The {lightmagenta}lovely{eoc} packet: Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
+	// ft_printf("The {lightmagenta}lovely{eoc} packet: Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
+	ft_printf("Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
 	printpacket(&lemin, packet);
+	printants(&lemin, packet);
 
 	/* TODO: Free superstructure */
 	return (0);

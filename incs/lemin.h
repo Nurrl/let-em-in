@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/11 18:03:11 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/11 19:46:08 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ t_bool			bfs(t_lemin *lemin, int *parents);
 t_node			*karp(t_lemin *l,
 		t_bool (*evalpacket)(t_lemin *lemin, t_node *packet, t_node *best));
 int				*initpath(int count, size_t size);
+
+/*
+** Print function
+*/
+void			printants(t_lemin *lemin, t_node *packet);
 
 /*
 ** Collector functions

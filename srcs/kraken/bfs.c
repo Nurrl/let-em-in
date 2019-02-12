@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/11 18:21:06 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/12 02:34:42 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static t_bool	filter(t_lemin *lemin, int *parents, int current, int neigh)
 	if (lemin->flows[current][neigh] == 1)
 		return (false);
 	if (lemin->flows[current][neigh] == 0
+			&& prev != -1
 			&& lemin->flows[current][prev] == 0
 			&& isflowing(lemin, current))
 		return (false);
