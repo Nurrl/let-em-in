@@ -6,13 +6,13 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/12 03:27:08 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/13 21:14:58 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static int	exiterr(void)
+static int		exiterr(void)
 {
 	ft_printf("ERROR\n");
 	return (1);
@@ -21,8 +21,8 @@ static int	exiterr(void)
 static float	flowfactor(t_lemin *l, t_node *packet)
 {
 	float	factor;
-	int		totcount;
-	int		pathcount;
+	float	totcount;
+	float	pathcount;
 	t_node	*curr;
 
 	totcount = 0;
@@ -30,14 +30,13 @@ static float	flowfactor(t_lemin *l, t_node *packet)
 	curr = packet;
 	while (true)
 	{
-		totcount += ll_len(curr->data);
+		totcount += ll_len(curr->data) - 1;
 		curr = curr->next;
 		pathcount++;
 		if (curr == packet)
 			break ;
 	}
-//	factor = ((totcount - (pathcount * 2)) + l->antcount) / pathcount; // Old forula
-	factor = ((totcount + l->antcount) / pathcount - 1); // Xavier formula
+	factor = ((totcount + l->antcount) / pathcount) - 1;
 	return (factor);
 }
 
@@ -52,20 +51,24 @@ static t_bool	evalpacket(t_lemin *l, t_node *packet, t_node *best)
 	else
 		isbest = ((pflow < l->kr.bestflow) ? true : false);
 	if (isbest)
-		l->turns = (int)pflow;
+		l->turns = (int)(pflow + 0.999999f);
 	if (isbest)
 		l->kr.bestflow = pflow;
 	return (isbest);
 }
 
-static void	printlines(t_lemin *lemin)
+void			printlines(t_lemin *lemin, t_bool print)
 {
 	char *l;
 
 	while (keepgnl(stdin, &l, lemin) > 0)
 		;
 	while ((l = ll_pop(&lemin->lines, 0)))
-		ft_printf("%s\n", l);
+	{
+		if (print)
+			ft_printf("%s\n", l);
+		free(l);
+	}
 }
 
 int				main(void)
@@ -73,17 +76,17 @@ int				main(void)
 	static t_lemin	lemin;
 	static t_node	*packet;
 
-	if (!parser(&lemin) && ll_del(&lemin.lines))
+	if (!parser(&lemin) && cleanlemin(&lemin))
 		return (exiterr());
-	if (!(packet = karp(&lemin, &evalpacket)) && ll_del(&lemin.lines))
+	if (!(packet = karp(&lemin, &evalpacket)) && cleanlemin(&lemin))
 		return (exiterr());
-	printlines(&lemin);
-
-	// ft_printf("The {lightmagenta}lovely{eoc} packet: Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
-	ft_printf("Turn count '%d' for {yellow}%d{eoc} ants.\n", lemin.turns, lemin.antcount);
+	printlines(&lemin, true);
+	ft_dprintf(stderr, "The {lightmagenta}lovely{eoc} packet:\n");
+	ft_dprintf(stderr, "		Turn count '%d' for {yellow}%d{eoc} ants.\n",
+			lemin.turns, lemin.antcount);
 	printpacket(&lemin, packet);
 	printants(&lemin, packet);
-
-	/* TODO: Free superstructure */
+	cleanpacket(&packet);
+	cleanlemin(&lemin);
 	return (0);
 }

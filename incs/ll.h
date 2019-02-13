@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:32:09 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/11 16:02:39 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/13 20:01:26 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,6 @@
 
 # include <libft.h>
 
-/*
-** TODO: Reference
-*/
-/*typedef union	u_data {
-	double		d;
-	long double	ld;
-	char		c;
-	short		s;
-	int			i;
-	long		l;
-	long long	ll;
-	void*		p;
-}				t_data;
-*/
 /*
 ** Circular doubly linked list implementation:
 ** * It can lead to infinite loops.

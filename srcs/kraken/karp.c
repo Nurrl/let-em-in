@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/11 20:35:02 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/13 20:06:34 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,35 @@ static t_bool	applyflow(t_lemin *lemin, int *parents, t_bool success)
 	id = lemin->endid;
 	while (id != lemin->startid)
 	{
-//		ft_printf("%d {green}<<{eoc} ", id);
 		lemin->flows[id][parents[id]] -= 1;
 		lemin->flows[parents[id]][id] += 1;
 		id = parents[id];
 	}
-//	ft_printf("%d\n", id);
-	//printmatrix(lemin->flows, lemin->roomcount);
 	return (true);
+}
+
+void			freepacket(t_node **packet)
+{
+	t_node *tmp;
+	t_node *path;
+
+	if (!packet || !*packet)
+		return ;
+	tmp = *packet;
+	while (true)
+	{
+		path = tmp->data;
+		ll_del(&path);
+		tmp = tmp->next;
+		if (tmp == *packet)
+			break ;
+	}
+	ll_del(packet);
 }
 
 t_node			*karp(t_lemin *lemin,
 		t_bool (*evalpacket)(t_lemin *lemin, t_node *packet, t_node *best))
 {
-	int		i;
 	t_node	*best;
 	t_node	*current;
 	int		*parents;
@@ -82,22 +97,14 @@ t_node			*karp(t_lemin *lemin,
 	while (applyflow(lemin, parents, bfs(lemin, parents)))
 	{
 		current = extractpaths(lemin);
-		// printmatrix(lemin->flows, lemin->roomcount);
-		// ft_printf("Packet: ({red}%p{eoc})\n", current);
-		// checkduplicate(lemin, current);
-		// printpacket(lemin, current);
 		if (evalpacket(lemin, current, best))
 		{
-			ft_printf("Packet {magenta}%p{eoc}: {green}Better{eoc}\n", current);
+			freepacket(&best);
 			best = current;
 		}
 		else
-			ft_printf("Packet {magenta}%p{eoc}: Even\n", current);
+			freepacket(&current);
 	}
-	i = -1;
-	while (++i < lemin->roomcount)
-		free(lemin->flows[i]);
-	free(lemin->flows);
-	lemin->flows = NULL;
+	free(parents);
 	return (best);
 }

@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 15:02:08 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/12 02:34:42 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/13 22:08:09 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,15 @@ static t_bool	filter(t_lemin *lemin, int *parents, int current, int neigh)
 	return (true);
 }
 
-t_bool			bfs(t_lemin *lemin, int *parents)
+static t_bool	doprocess(t_lemin *lemin,
+		t_node *q, t_bool *visited, int *parents)
 {
-	t_bool	*visited;
 	t_room	*room;
-	t_node	*q;
 	int		i;
 
-	ft_memset(parents, -1, lemin->roomcount * sizeof(*parents));
-	if (!(visited = ft_calloc(lemin->roomcount, sizeof(*visited))))
-		return (false);
-	q = 0;
-	visited[lemin->startid] = true;
-	ll_add(&q, &lemin->rooms[lemin->startid]);
-	while ((room = ll_pop(&q, 0)) && (i = -1) == -1)
+	while ((room = ll_pop(&q, 0)))
 	{
+		i = -1;
 		while (++i < lemin->roomcount)
 		{
 			if (lemin->tubes[room->id][i] && !visited[i]
@@ -64,9 +58,28 @@ t_bool			bfs(t_lemin *lemin, int *parents)
 				parents[i] = room->id;
 				ll_add(&q, &lemin->rooms[i]);
 				if (i == lemin->endid)
+				{
+					ll_del(&q);
+					free(visited);
 					return (true);
+				}
 			}
 		}
 	}
+	free(visited);
 	return (false);
+}
+
+t_bool			bfs(t_lemin *lemin, int *parents)
+{
+	t_bool	*visited;
+	t_node	*q;
+
+	ft_memset(parents, -1, lemin->roomcount * sizeof(*parents));
+	if (!(visited = ft_calloc(lemin->roomcount, sizeof(*visited))))
+		return (false);
+	q = 0;
+	visited[lemin->startid] = true;
+	ll_add(&q, &lemin->rooms[lemin->startid]);
+	return (doprocess(lemin, q, visited, parents));
 }
