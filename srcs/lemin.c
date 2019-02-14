@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 13:35:48 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/13 21:14:58 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/14 05:32:13 by glodi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,6 @@ int				main(void)
 	if (!(packet = karp(&lemin, &evalpacket)) && cleanlemin(&lemin))
 		return (exiterr());
 	printlines(&lemin, true);
-	ft_dprintf(stderr, "The {lightmagenta}lovely{eoc} packet:\n");
-	ft_dprintf(stderr, "		Turn count '%d' for {yellow}%d{eoc} ants.\n",
-			lemin.turns, lemin.antcount);
-	printpacket(&lemin, packet);
 	printants(&lemin, packet);
 	cleanpacket(&packet);
 	cleanlemin(&lemin);
