@@ -6,7 +6,7 @@
 #    By: glodi <glodi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 14:23:48 by lroux             #+#    #+#              #
-#    Updated: 2019/02/13 22:08:55 by lroux            ###   ########.fr        #
+#    Updated: 2019/02/14 00:46:20 by glodi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS	:= lemin.c collector.c debug.c \
 LIBS	:= libft libpf
 LIBDIR	:= libs
 
-#DEBUG	:= 1
+DEBUG	:= 1
 
 # Include core
 include $(LIBDIR)/project.mk
