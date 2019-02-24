@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/17 11:46:02 by lroux             #+#    #+#             */
-/*   Updated: 2019/01/23 18:58:56 by glodi            ###   ########.fr       */
+/*   Updated: 2019/02/24 21:41:12 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_bool	linkrooms(t_lemin *lemin, char *room1, char *room2, t_rooms *rooms)
 
 t_bool	maketubes(t_lemin *lemin, t_rooms *rooms, char *line)
 {
-	if (!(lemin->tubes = (int**)ft_mk2array(
+	if (!line || !(lemin->tubes = (int**)ft_mk2array(
 			lemin->roomcount, lemin->roomcount, sizeof(**lemin->tubes))))
 		return (false);
 	while (true)
