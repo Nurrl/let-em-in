@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:57:07 by lroux             #+#    #+#             */
-/*   Updated: 2019/02/13 21:58:45 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/24 18:15:01 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct	s_rooms {
 
 typedef struct	s_kraken {
 	float		bestflow;
+	t_bool		isstartend;
 }				t_kraken;
 
 typedef struct	s_lemin {

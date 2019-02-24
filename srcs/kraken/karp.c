@@ -6,7 +6,7 @@
 /*   By: glodi <glodi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 11:23:33 by glodi             #+#    #+#             */
-/*   Updated: 2019/02/13 20:06:34 by lroux            ###   ########.fr       */
+/*   Updated: 2019/02/24 18:19:46 by lroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static t_bool	applyflow(t_lemin *lemin, int *parents, t_bool success)
 	if (!success)
 		return (false);
 	id = lemin->endid;
+	if (parents[id] == lemin->startid)
+		lemin->kr.isstartend = true;
 	while (id != lemin->startid)
 	{
 		lemin->flows[id][parents[id]] -= 1;
@@ -94,7 +96,8 @@ t_node			*karp(t_lemin *lemin,
 				lemin->roomcount, sizeof(**lemin->flows)))
 		|| !(parents = malloc(lemin->roomcount * sizeof(*parents))))
 		return (NULL);
-	while (applyflow(lemin, parents, bfs(lemin, parents)))
+	while (!lemin->kr.isstartend
+			&& applyflow(lemin, parents, bfs(lemin, parents)))
 	{
 		current = extractpaths(lemin);
 		if (evalpacket(lemin, current, best))
